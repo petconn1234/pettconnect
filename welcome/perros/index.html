@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>JAVSCRIPT </title>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+ 
+	<div class="container">
+		<div class="form">
+		   <h2 class="text-center text-warning">Add my Task</h2>
+			   <form id="task-form">
+				   <div class="field">
+				   <input type="text"  id="task-title" placeholder="Task Title" autofocus />
+				   </div>
+				   <div class="field">
+					   <input type="text"  id="task-description" placeholder="Task Des" autofocus />
+				   </div>
+   
+				   
+				   <button class="btn btn-success" id="btn-task-form">  Save</button>
+			   </form>
+		</div>
+		<div  class="task-container" id="tasks-container"></div>
+   
+	 </div>
+
+
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-app.js"></script>
+		<!-- TODO: Add SDKs for Firebase products that you want to use
+		 https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-firestore.js"></script>
+
+<script>
+             const firebaseConfig = {
+  apiKey: "AIzaSyBiVELSaKhuhVZ4KAiq5StcPqhAayzxWlM",
+  authDomain: "pets-9df20.firebaseapp.com",
+  projectId: "pets-9df20",
+  storageBucket: "pets-9df20.appspot.com",
+  messagingSenderId: "846509275235",
+  appId: "1:846509275235:web:48ce5423100ebb2f22a056",
+  measurementId: "G-KY82DTFZ6R"
+};
+
+			
+    firebase.initializeApp(firebaseConfig) 
+
+</script>	
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+ <script src="/welcome/perros/js/mostrar.js"></script>
+</body>
+</html>

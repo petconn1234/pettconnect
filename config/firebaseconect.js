@@ -1,6 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-analytics.js";
-import { getAuth,   createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile} from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
+import { getAuth,createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile} from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
+
+import { getFirestore, collection, addDoc } from  "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBiVELSaKhuhVZ4KAiq5StcPqhAayzxWlM",
@@ -12,10 +14,41 @@ const firebaseConfig = {
   measurementId: "G-KY82DTFZ6R"
 };
 
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth();
+var db = getFirestore(app);
+
+
+export class  Form {
+  
+  async  guardarDatos(e) {
+    e.preventDefault();
+  
+    // Obtén los valores del formulario.
+    const nombre = document.getElementById('nombre').value;
+    const numero = document.getElementById('numero').value;
+    const email = document.getElementById('email').value;
+    const direccion = document.getElementById('direccion').value;
+  
+    // Guarda los datos en la colección "solicitudes".
+    try {
+      const docRef = await addDoc(collection(db, "solicitudes"), {
+        nombre: nombre,
+        numero: numero,
+        email: email,
+        direccion: direccion
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (error) {
+      console.error("Error adding document: ", error);
+    }
+  }
+}
+
+
 
 export class ManageAccount {
   register(email, password, displayName) {
@@ -51,7 +84,7 @@ export class ManageAccount {
       });
   }
 
-  signOut() {
+    signOut() {
     signOut(auth)
       .then((_) => {
         window.location.href = "index.html";
@@ -79,14 +112,11 @@ export class ManageAccount {
           
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
               <li class="nav-item">
-        <a class="getstarted" href="#" style="background-color: red; color: white; padding: 10px 20px; text-decoration: none;" onclick="logout()">Cerrar sesión</a>
+        <a class="getstarted" href="/login/login.html" style="background-color: red; color: white; padding: 10px 20px; text-decoration: none;" onclick="logout()">Cerrar sesión</a>
     </li>`;
-
-            a = user.displayName;
-
-            
+            a = user.displayName;    
         } else {
-            li.innerHTML = '<a class="getstarted" href="../login/login.html">Inicia sesion</a>';
+            li.innerHTML = '<a class="getstarted" href="/login/login.html">Inicia sesion</a>';
             console.error("no fue");
         }
 
@@ -95,4 +125,3 @@ export class ManageAccount {
   }
 
 }
-
