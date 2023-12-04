@@ -27,13 +27,13 @@ export class  Form {
   async  guardarDatos(e) {
     e.preventDefault();
   
-    // Obtén los valores del formulario.
+    
     const nombre = document.getElementById('nombre').value;
     const numero = document.getElementById('numero').value;
     const email = document.getElementById('email').value;
     const direccion = document.getElementById('direccion').value;
   
-    // Guarda los datos en la colección "solicitudes".
+    
     try {
       const docRef = await addDoc(collection(db, "solicitudes"), {
         nombre: nombre,
@@ -60,12 +60,12 @@ export class ManageAccount {
       })
       .then((_) => {
         window.location.href = "login.html";
-        // Mostrar alerta de registro exitoso
+        
         alert("Registro exitoso. Serás redirigido a la página de inicio de sesión.");
       })
       .catch((error) => {
         console.error(error.message);
-        // Mostrar alerta de error de registro
+      
         alert("Error al registrar: " + error.message);
       });
   }
@@ -74,12 +74,10 @@ export class ManageAccount {
     signInWithEmailAndPassword(auth, email, password)
       .then((_) => {
         window.location.href = "../welcome/index.html";
-        // Mostrar alerta de inicio de sesión exitoso
         alert("Has iniciado sesión correctamente. Serás redirigido a la página principal.");
       })
       .catch((error) => {
         console.error(error.message);
-                // Mostrar alerta de error de inicio de sesión
                 alert("Error al iniciar sesión: " + error.message);
       });
   }

@@ -1,11 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-storage.js";
-import { getFirestore, collection, addDoc } from  "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
-
-
-const onGetTasks = (callback) => db.collection('perros').onSnapshot(callback);
-
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBiVELSaKhuhVZ4KAiq5StcPqhAayzxWlM",
@@ -15,91 +11,65 @@ const firebaseConfig = {
     messagingSenderId: "846509275235",
     appId: "1:846509275235:web:48ce5423100ebb2f22a056",
     measurementId: "G-KY82DTFZ6R"
-  };
+};
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 var db = getFirestore(app);
-const form = document.querySelector("#task-form")
-const taskContainer = document.querySelector('#tasks-container')
+const form = document.querySelector("#task-form");
+const taskContainer = document.querySelector('#tasks-container');
 
-let editStatus = false
-let id = ''
+let nombreInput = document.getElementById('nombre');
+let edadInput = document.getElementById('edad');
+let razaInput = document.getElementById('raza');
+let generoInput = document.getElementById('genero');
+let descripcionInput = document.getElementById('descripcion');
+let imagenInput = document.getElementById('imagen');
+let telefono = document.getElementById('Telefono');
 
-
-
-
-const saveTask = (title,description)=>{
-	 
-	db.collection('tasks').doc().set({	
-        title,	
-        description
-	 })
-
-}
-
-const deleteTask = (id) => db.collection('tasks').doc(id).delete()
-
-
- const getTasks = (id) => db.collection('tasks').doc(id).get()
-
- const UpdateTask = (id,updateTask)=>{
-	db.collection('tasks').doc(id).update(updateTask)
- }
-
-
-
-// function add tasks
 form.addEventListener('submit', async (e) => {
-	e.preventDefault();
-  
-	const nombre = document.getElementById('nombre').value;
-	const edad = document.getElementById('edad').value;
-	const raza = document.getElementById('raza').value;
-	const genero = document.getElementById('genero').value;
-	const descripcion = document.getElementById('descripcion').value;
-	const imagen = document.getElementById('imagen').files[0];
-  
-	// Crear una referencia al lugar donde guardaremos la imagen
-	var storage = getStorage();
-	var storageRef = ref(storage, 'images/' + imagen.name);
-  
-	// Subir la imagen
-	var uploadTask = uploadBytesResumable(storageRef, imagen);
-  
-	uploadTask.on('state_changed', 
-	  (snapshot) => {
-		// Observar los cambios en el estado de la subida
-		var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-		console.log('Upload is ' + progress + '% done');
-	  }, 
-	  (error) => {
-		// Manejar errores
-		console.error("Error subiendo archivo: ", error);
-	  }, 
-	  () => {
-		// Subida completada exitosamente, ahora obtenemos la URL de descarga
-		getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-		  console.log('File available at', downloadURL);
-  
-		  // Ahora que tenemos la URL de la imagen, podemos guardarla en Firestore junto con los otros datos
-		  try {
-			const docRef = await addDoc(collection(db, "perros"), {
-			  nombre: nombre,
-			  edad: edad,
-			  raza: raza,
-			  genero: genero,
-			  descripcion: descripcion,
-			  imagen: downloadURL,
-			  usuario: auth.currentUser.uid  // Asegúrate de que el usuario esté conectado
-			});
-			console.log("Document written with ID: ", docRef.id);
-		  } catch (error) {
-			console.error("Error adding document: ", error);
-		  }
-		});
-	  }
-	);
-  });
-  
-  
+    e.preventDefault();
+
+    const nombre = nombreInput.value;
+    const edad = edadInput.value;
+    const telefonoValue = telefono.value;
+    const raza = razaInput.value;
+    const genero = generoInput.value;
+    const descripcion = descripcionInput.value;
+    const imagen = imagenInput.files[0];
+
+    if (!nombre || !edad || !raza || !genero || !descripcion || !imagen) {
+        swal("Error", "Por favor, complete todos los campos", "error");
+        return;
+    }
+
+    var storage = getStorage();
+    var storageRef = ref(storage, 'images/' + imagen.name);
+
+    var uploadTask = uploadBytesResumable(storageRef, imagen);
+
+    try {
+        await uploadTask;
+
+        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+        const docRef = await addDoc(collection(db, "perros"), {
+            nombre: nombre,
+            edad: edad,
+            raza: raza,
+            telefono: telefonoValue,
+            genero: genero,
+            descripcion: descripcion,
+            imagen: downloadURL,
+            usuario: auth.currentUser.email
+        });
+
+        form.reset();
+
+        swal("Éxito", "Mascota añadida", "success");
+        console.log("Document written with ID: ", docRef.id);
+    } catch (error) {
+        swal("Error", "Ocurrió un error, inténtelo más tarde", "error");
+        console.error("Error adding document: ", error);
+    }
+});

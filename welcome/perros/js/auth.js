@@ -1,8 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-analytics.js";
-import { getAuth,createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile} from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
-
-import { getFirestore, collection, addDoc } from  "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
+import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBiVELSaKhuhVZ4KAiq5StcPqhAayzxWlM",
@@ -14,36 +12,34 @@ const firebaseConfig = {
   measurementId: "G-KY82DTFZ6R"
 };
 
-
-
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const auth = getAuth();
-var db = getFirestore(app);
+const db = getFirestore(app);
 
-// Crear el botón
 const btn = document.createElement('button');
 btn.textContent = 'Añadir';
 btn.classList.add('btn', 'btn-primary');
 btn.style.position = 'fixed';
 btn.style.bottom = '20px';
 btn.style.right = '20px';
-btn.style.display = 'none'; // Ocultar el botón inicialmente
+btn.style.display = 'none';
 document.body.appendChild(btn);
 
 btn.addEventListener('click', () => {
-    
-    window.location.href = '/welcome/perros/registro.html';
-  });
+  window.location.href = '/welcome/perros/registro.html';
+});
 
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const refugiosQuery = query(collection(db, 'refugios'), where('email', '==', user.email));
+    const refugiosSnapshot = await getDocs(refugiosQuery);
 
-onAuthStateChanged(auth, (user) => {
-  if (user && user.email === 'refugio@gmail.com') {
-    
-    btn.style.display = 'block';
+    if (!refugiosSnapshot.empty) {
+      btn.style.display = 'block';
+    } else {
+      btn.style.display = 'none';
+    }
   } else {
-    
     btn.style.display = 'none';
   }
 });

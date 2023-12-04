@@ -36,7 +36,7 @@ async function  guardarDatos(e) {
     });
     console.log("Document written with ID: ", docRef.id);
 
-    // Limpia los campos del formulario
+    
     nombre.value = "";
     numero.value = "";
     email.value = "";
@@ -47,8 +47,8 @@ async function  guardarDatos(e) {
   }
 }
 
-// Obtén el formulario usando su ID
+
 const form = document.querySelector('#form');
 
-// Agrega un event listener al evento 'submit' del formulario
+
 form.addEventListener('submit', guardarDatos);

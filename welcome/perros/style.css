@@ -15,7 +15,7 @@
   }
 
 :root{
-   --main-color:#f21170;
+   --main-color:#11f233;
    --main-color2:#542e71;
 }
 
@@ -158,4 +158,22 @@ form button.active:hover{
     background: transparent;
     border: 1px solid var(--main-color);
     color: var(--main-color);
+}
+
+body {
+    background-image: url('/refugio/fondito.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Ajusta la opacidad aquí */
+    z-index: -1; /* Para asegurarse de que esté detrás del contenido */
 }
